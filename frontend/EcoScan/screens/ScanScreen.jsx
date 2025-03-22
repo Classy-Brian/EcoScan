@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button, ScrollView } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import { Camera } from 'expo-camera';
 
 export default function HomeScreen() {
   const [hasPermission, setHasPermission] = useState(null);
@@ -9,14 +8,14 @@ export default function HomeScreen() {
 
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
+      const { status } = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === 'granted');
     })();
   }, []);
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    console.log(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
 
   if (hasPermission === null) {

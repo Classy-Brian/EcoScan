@@ -24,7 +24,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="scan"
         options={{
-          title: 'Home',
+          title: 'home',
         }}
       />
       <Tabs.Screen
