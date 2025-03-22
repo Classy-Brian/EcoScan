@@ -41,13 +41,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   stretch: {
     width: 120,
     height: 50,
-    resizeMode: 'stretch',
+    resizeMode: 'contain',
   },
   profileImage: {
     width: 40,

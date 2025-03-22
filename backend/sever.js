@@ -18,10 +18,10 @@ app.use(cors());
 // API route to fetch product data
 app.get('/api/product/:barcode', async (req, res) => {
     const barcode = req.params.barcode;
-    const url = `https://world.openfoodfacts.org/api/v3/product/${barcode}`;
+    const url = `https://world.openfoodfacts.org/api/v3/product/${barcode}?fields=product_name,image_url,packagings`; 
     
-    console.log("Barcode:", barcode); // Log the barcode
-    console.log("Requesting URL:", url); // Log the constructed URL
+    console.log("Barcode:", barcode); 
+    console.log("Requesting URL:", url); 
 
   try {
     const response = await axios.get(url);
@@ -29,12 +29,9 @@ app.get('/api/product/:barcode', async (req, res) => {
     // Check for a successful response (status code 200)
     if (response.status === 200) {
         // Check if the product was found (Open Food Facts returns status 0 if not found)
-        res.json(response.data.product);
-        if(response.data.status === 1) {
-            res.json(response.data.product); // Send the product data
-        } else {
-            res.status(404).json({ error: 'Product not found' }); // 404 Not Found
-        }
+        const productData = response.data.product;
+
+        res.json(productData);
 
     } else {
       // Handle other HTTP errors
@@ -44,16 +41,13 @@ app.get('/api/product/:barcode', async (req, res) => {
   } catch (error) {
     console.error("Error fetching product info:", error);
 
-     // Handle Axios errors (e.g., network issues)
+     // Handle Axios errors 
         if (error.response) {
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
             res.status(error.response.status).json({ error: `Open Food Facts API error: ${error.response.status}` });
         } else if (error.request) {
-            // The request was made but no response was received
             res.status(500).json({ error: 'No response from Open Food Facts API' });
         } else {
-            // Something happened in setting up the request that triggered an Error
+
             res.status(500).json({ error: 'Error fetching product data' });
         }
   }
