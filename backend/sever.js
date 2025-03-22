@@ -18,10 +18,10 @@ app.use(cors());
 // API route to fetch product data
 app.get('/api/product/:barcode', async (req, res) => {
     const barcode = req.params.barcode;
-    const url = `https://world.openfoodfacts.org/api/v3/product/${barcode}`;
+    const url = `https://world.openfoodfacts.org/api/v3/product/${barcode}?fields=product_name,image_url,packagings`; 
     
-    console.log("Barcode:", barcode); // Log the barcode
-    console.log("Requesting URL:", url); // Log the constructed URL
+    console.log("Barcode:", barcode); 
+    console.log("Requesting URL:", url); 
 
   try {
     const response = await axios.get(url);
@@ -29,7 +29,9 @@ app.get('/api/product/:barcode', async (req, res) => {
     // Check for a successful response (status code 200)
     if (response.status === 200) {
         // Check if the product was found (Open Food Facts returns status 0 if not found)
-        res.json(response.data.product);
+        const productData = response.data.product;
+
+        res.json(productData);
 
     } else {
       // Handle other HTTP errors
@@ -45,6 +47,7 @@ app.get('/api/product/:barcode', async (req, res) => {
         } else if (error.request) {
             res.status(500).json({ error: 'No response from Open Food Facts API' });
         } else {
+
             res.status(500).json({ error: 'Error fetching product data' });
         }
   }
