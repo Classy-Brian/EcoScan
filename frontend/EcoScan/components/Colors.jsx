@@ -1,6 +1,6 @@
 export const colors = {
     white: '#FFFFFF',
-    header: '#1F508F',      // header, recipe title color
+    header: '#508f1f',      // header, recipe title color
     primary: '#ADC6F2',     // for active buttons
     secondary: '#D8E6FB',   //
     lightgrey: '#ECF1F9',   // for rectangle backgrounds
