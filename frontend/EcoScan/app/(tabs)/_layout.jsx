@@ -25,7 +25,12 @@ export default function TabLayout() {
         name="scan"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <Ionicons name="home" size={28} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="instruction"
+        options={{
+          title: 'instruction',
         }}
       />
     </Tabs>
