@@ -53,7 +53,20 @@ app.get('/api/product/:barcode', async (req, res) => {
   }
 });
 
+app.get('/api/chatgpt', async (req, res) => {
+    const genAI = new GoogleGenerativeAI(process.env.APIKey);
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+    const prompt = "Explain how AI works in a few words";
+
+    const result = await model.generateContent(prompt);
+    console.log(result.response.text());
+
+});
+
 app.listen(PORT, () => {
     connectDB(); // Connect to DB after starting server
     console.log(`Server started at http://localhost:${PORT}`);
+
+    
 });
