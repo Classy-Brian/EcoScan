@@ -1,0 +1,16 @@
+# General
+.DS_Store
+Thumbs.db
+node_modules/
+.env
+
+# Expo specific
+.expo/
+*.apk
+*.aab
+*.ipa
+
+# Backend specific
+/dist/
+/logs/
+.env
