@@ -8,6 +8,8 @@ import { connectDB } from './config/db.js';
 
 import axios from 'axios';
 
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -53,20 +55,18 @@ app.get('/api/product/:barcode', async (req, res) => {
   }
 });
 
-app.get('/api/chatgpt', async (req, res) => {
-    const genAI = new GoogleGenerativeAI(process.env.APIKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-
-    const prompt = "Explain how AI works in a few words";
-
+async function textGenTextOnlyPrompt() {
+    const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  
+    const prompt = "Write a story about a magic backpack.";
+  
     const result = await model.generateContent(prompt);
     console.log(result.response.text());
+  }
 
-});
 
 app.listen(PORT, () => {
     connectDB(); // Connect to DB after starting server
     console.log(`Server started at http://localhost:${PORT}`);
-
-    
 });
