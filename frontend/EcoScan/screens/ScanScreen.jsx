@@ -61,7 +61,7 @@ export default function HomeScreen() {
   const handleBarCodeScanned = ({ type, data }) => {
     // Set scanned to true to indicate a barcode has been scanned.
     setScanned(true);
-    fetchBarcode(barcodeInput)
+    fetchBarcode(data)
     console.log(barcodeInput)
     let barcode = barcodeInput; // Assign barcodeInput directly
     let packaging = 'Plastic, Bottle';
