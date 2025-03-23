@@ -103,26 +103,28 @@ export default function HomeScreen() {
 };
 
   // Function to handle manual barcode entry.
-  const handleManualBarcode = async () => { // MUST be async
+  const handleManualBarcode = async () => {
     if (barcodeInput) {
         setScanned(true);
-        await fetchBarcode(barcodeInput); 
 
-        await fetchInstructions(barcodeInput);
 
-        // AFTER the await, output is ready. Use it directly.
+        const barcodeData = await fetchBarcode(barcodeInput);
+
+        const instructionsData = await fetchInstructions(barcodeInput);
+
+        // Now both output and instruction are ready
         let barcode = barcodeInput;
-        let packaging = output?.materials?.[0]?.packaging || 'Unknown';  // Still useful for display
-        let brand = 'Unknown'; // We'll work on brand later
-        let materials = output?.materials || [];
-        let recycling_instructions = instruction; // Placeholder
-        let images = output?.images || [];
+        let packaging = barcodeData?.materials?.[0]?.packaging || 'Unknown';
+        let brand = barcodeData?.name || 'Unknown Product';
+        let materials = barcodeData?.materials || [];
+        let recycling_instructions = instructionsData;  // Use returned value
+        let images = barcodeData?.images || [];
 
-        console.log("SCANSCREEN (Manual)", { barcode, packaging, brand, materials, images }); // Log everything
-        console.log("SCAN SCREEN INSTRUCTION:", {recycling_instructions})
+
+        console.log("SCANSCREEN (Manual)", { barcode, packaging, brand, materials, images, recycling_instructions });
         router.push({ pathname: 'instruction', params: { barcode, packaging, brand, materials, recycling_instructions, images } });
-    }
-};
+        }
+    };
 
   // Render a loading message while waiting for permission status.
   if (hasPermission === null) {

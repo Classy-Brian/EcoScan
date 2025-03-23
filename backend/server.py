@@ -58,8 +58,10 @@ class EcoScanHandler(http.server.BaseHTTPRequestHandler): #create a class that a
         product_name = "No product name available"
         if product_data["product"]["product_name"]:
             product_name = product_data["product"]["product_name"]
-        instructions = {"name": product_name, "images":{},"materials":[]} 
-        instructions = {"images":{},"materials":[]}
+
+        instructions = {"name": product_name, "images":{},"materials":[]}
+        print(instructions["name"]) 
+
         for i in range(len(product_data["product"]["packagings"])):
             pd = product_data["product"]
             p = pd["packagings"][i]
