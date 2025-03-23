@@ -1,15 +1,25 @@
-import { Image, View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { Image, View, Text, StyleSheet } from 'react-native';
 import React from 'react';
 import { Stack } from 'expo-router'; // Use Stack from expo-router
-import { colors } from "../components/Colors";
+import { colors } from "../components/Color";
+import { Tabs } from 'expo-router';
+
 
 function HeaderLogo() {
   return (
-    <View style={styles.container}>
+    <View style={styles.logoContainer}>
       <Image
         style={styles.stretch}
-        source={require('../assets/images/Ecoscan.png')}
+        source={require('../assets/images/RecycScan_logo4.png')}
       />
+    </View>
+  );
+}
+
+function HeaderTitle() {
+  return (
+    <View style={styles.titleContainer}>
+      <Text style={styles.title}>RecycScan</Text>
     </View>
   );
 }
@@ -23,24 +33,37 @@ const _layout = () => {
           headerShown: true,
           headerLeft: () => null,
           headerBackVisible: false,
-          headerTitle: () => <HeaderLogo />,
+          headerRight: () => <HeaderLogo />,
+          headerTitle: () => <HeaderTitle />,
           headerStyle: {
             backgroundColor: colors.header,
+            position: 'relative', // Positioning for logo and title
           },
           headerTintColor: colors.white,
           headerTitleStyle: {
             fontWeight: 'bold',
-          },
+            textAlign: 'center', // Ensures the title is centered
+          }, 
         }}
       />
+      <Stack.Screen
+        name="index"
+        options={{
+          headerShown: false
+        }}
+
+      />
     </Stack>
-  ); 
+  );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  logoContainer: {
+    position: 'absolute', // Absolute positioning for the logo
+    right: 20, // Adjust the position from the right edge
+  },
+  titleContainer: {
     flex: 1,
-    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -48,14 +71,12 @@ const styles = StyleSheet.create({
     width: 120,
     height: 50,
     resizeMode: 'contain',
+    backgroundColor: colors.header,
   },
-  profileImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginRight: 10, // optional, to space it nicely from the edge
-    borderWidth: 1,
-    borderColor: colors.white,
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff', // Set title color to black
   },
 });
 

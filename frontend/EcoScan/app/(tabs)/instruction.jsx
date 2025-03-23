@@ -1,2 +1,2 @@
-import InstructionScreen from "@/screens/InstructionScreen";
+import InstructionScreen from "../../screens/InstructionScreen"
 export default InstructionScreen;

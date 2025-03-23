@@ -1,2 +1,2 @@
-import Scanscreen from "@/screens/ScanScreen";
-export default Scanscreen;
+import ScanScreen from "@/screens/ScanScreen";
+export default ScanScreen;
