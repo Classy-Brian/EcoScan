@@ -14,3 +14,6 @@ node_modules/
 /dist/
 /logs/
 .env
+/backend/node_modules
+/backend/node_modules
+/backend/myenv
