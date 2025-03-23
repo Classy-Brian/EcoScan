@@ -19,7 +19,7 @@ function HeaderLogo() {
 function HeaderTitle() {
   return (
     <View style={styles.titleContainer}>
-      <Text style={styles.title}>RecycScan</Text>
+      <Text style={styles.title}>EcoScan</Text>
     </View>
   );
 }
