@@ -20,6 +20,8 @@ export default function HomeScreen() {
 
   const [output, setOutput] = useState('');
 
+  const [instruction, setInstruction] = useState('');
+
   // Get the router instance using the useRouter hook from expo-router.  This is used for navigation.
   const router = useRouter(); 
 
@@ -57,6 +59,28 @@ export default function HomeScreen() {
     }
   };
 
+  const fetchInstructions = async (barcode) => {
+    try {
+      const apiUrl = `http://localhost:6968/explain?barcode=${barcode}`;
+      
+      const response = await fetch(apiUrl);
+  
+      // Check if the response is ok (status code 200-299)
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const data2 = await response.json();
+      console.log("Fetched instruction data:", data2);
+  
+      // You can process or display the fetched data as needed
+      setInstruction(data2.length > 0 ? data2 : []);
+  
+    } catch (err) {
+      console.error('Error fetching instruction:', err);
+    }
+  };
+
   // Function to handle barcode scanning events.
   const handleBarCodeScanned = ({ type, data }) => {
     // Set scanned to true to indicate a barcode has been scanned.
@@ -71,18 +95,26 @@ export default function HomeScreen() {
   };
 
   // Function to handle manual barcode entry.
-  const handleManualBarcode = () => { // Removed { type, data } - not needed
+  const handleManualBarcode = async () => { // MUST be async
     if (barcodeInput) {
-      setScanned(true);
-      fetchBarcode(barcodeInput)
-      console.log(barcodeInput)
-      let barcode = barcodeInput; // Assign barcodeInput directly
-      let packaging = 'Plastic, Bottle';
-      let brand = 'Sidi Ali';
-      console.log("SCANSCREEN (Manual)", { barcode, packaging, brand});
-      router.push({ pathname: 'instruction', params: { barcode, packaging, brand} });
+        setScanned(true);
+        await fetchBarcode(barcodeInput); 
+
+        await fetchInstructions(barcodeInput);
+
+        // AFTER the await, output is ready. Use it directly.
+        let barcode = barcodeInput;
+        let packaging = output?.materials?.[0]?.packaging || 'Unknown';  // Still useful for display
+        let brand = 'Unknown'; // We'll work on brand later
+        let materials = output?.materials || [];
+        let recycling_instructions = instruction; // Placeholder
+        let images = output?.images || [];
+
+        console.log("SCANSCREEN (Manual)", { barcode, packaging, brand, materials, images }); // Log everything
+        console.log("SCAN SCREEN INSTRUCTION:", {recycling_instructions})
+        router.push({ pathname: 'instruction', params: { barcode, packaging, brand, materials, recycling_instructions, images } });
     }
-  };
+};
 
   // Render a loading message while waiting for permission status.
   if (hasPermission === null) {

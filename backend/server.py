@@ -55,6 +55,10 @@ class EcoScanHandler(http.server.BaseHTTPRequestHandler): #create a class that a
             response = connection.getresponse()
 
         product_data = json.loads((response.read()).decode('utf-8'))
+        product_name = "No product name available"
+        if product_data["product"]["product_name"]:
+            product_name = product_data["product"]["product_name"]
+        instructions = {"name": product_name, "images":{},"materials":[]} 
         instructions = {"images":{},"materials":[]}
         for i in range(len(product_data["product"]["packagings"])):
             pd = product_data["product"]
