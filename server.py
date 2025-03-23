@@ -23,24 +23,31 @@ class EcoScanHandler(http.server.BaseHTTPRequestHandler):
                     response = connection.getresponse()
 
                 product_data = json.loads((response.read()).decode('utf-8'))
-                instructions = []
+                instructions = {"images":{},"materials":[]}
                 for i in range(len(product_data["product"]["packagings"])):
-                    p = product_data["product"]["packagings"][i]
-                    e = product_data["product"]["ecoscore_data"]["adjustments"]["packaging"]["packagings"][i]
+                    pd = product_data["product"]
+                    p = pd["packagings"][i]
+                    e = pd["ecoscore_data"]["adjustments"]["packaging"]["packagings"][i]
                     material = p["material"]["id"] if "material" in p.keys() and "id" in p["material"].keys() else None
                     units = p["number_of_units"] if "number_of_units" in p.keys() else None
                     shape = p["shape"]["id"] if "shape" in p.keys() and "id" in p["shape"] else None
                     how = p["recycling"]["id"] if "recycling" in p.keys() and "id" in p["recycling"].keys() else None
                     score = e["environmental_score_material_score"] if "environmental_score_material_score" in e.keys() else None
-                    instruction = {"material": material,"units":units,"shape":shape,"score":score,"how":how}  
+                    image = pd["image_url"]
+                    instruction = {"material": material,"units":units,"shape":shape,"score":score,"how":how}
+                    instructions["materials"].append(instruction)
+                if len(instructions) == 0:
+                    instruction = {"material": None,"units":None,"shape":None,"score":None,"how":None}
                     instructions.append(instruction)
+                pi = product_data["product"]
+                instructions["images"] = {"full":pi["image_url"], "small":pi["image_small_url"], "thumb":pi["image_thumb_url"]}
                 # Respond to the original client
                 self.send_response(200)
                 self.send_header("Content-type", "application/json")
                 self.end_headers()
                 self.wfile.write(json.dumps(instructions).encode("utf-8"))
 
-PORT = 6967
+PORT = 6969
 
 # Set up and start the server
 with socketserver.TCPServer(("", PORT), EcoScanHandler) as server:
