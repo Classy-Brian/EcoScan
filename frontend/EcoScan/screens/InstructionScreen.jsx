@@ -3,8 +3,8 @@ import { View, Text, StyleSheet } from 'react-native';
 
 export default function InstructionScreen({ route }) {
   // Destructure the barcodeInfo object from route.params
-  console.log(route?.params);
   const { barcodeInfo } = route?.params || {};
+  console.log("tessssssssssst")
   console.log(route?.params);
 
   return (

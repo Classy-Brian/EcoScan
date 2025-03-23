@@ -33,15 +33,16 @@ export default function HomeScreen() {
   const handleManualBarcode = () => {
     if (barcodeInput) {
       setScanned(true);
+      console.log(barcodeInput)
       const barcodeInfo = {
-        barcode: barcodeInput,
-        id: barcodeInput,
-        name: 'Sidi Ali - 33 cl',
-        quantity: '33 cl',
-        packaging: 'Plastic, Bottle',
-        brand: 'Sidi Ali',
-        category: 'Beverages and beverages preparations, Beverages, Waters, Spring waters, Mineral waters, Unsweetened beverages, Natural mineral waters',
-        country: 'Morocco',
+        // barcode: barcodeInput,
+        id: barcodeInput
+        // name: 'Sidi Ali - 33 cl',
+        // quantity: '33 cl',
+        // packaging: 'Plastic, Bottle',
+        // brand: 'Sidi Ali',
+        // category: 'Beverages and beverages preparations, Beverages, Waters, Spring waters, Mineral waters, Unsweetened beverages, Natural mineral waters',
+        // country: 'Morocco',
       };
       navigation.navigate('instruction', { barcodeInfo }); // Wrap barcodeInfo in params
     }
