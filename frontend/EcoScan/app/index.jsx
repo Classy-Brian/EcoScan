@@ -14,7 +14,7 @@ export default function Index() {
       />
 
       {/* Title */}
-      <Text style={styles.title}>RecycScan</Text>
+      <Text style={styles.title}>EcoScan</Text>
 
       {/* Get Started Button */}
       <TouchableOpacity style={styles.button} onPress={() => router.push('/scan')}>
