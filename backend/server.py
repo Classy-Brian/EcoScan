@@ -13,19 +13,26 @@ GEMINI_API_KEY = "AIzaSyA5lO6r-NK1kDgQh_zIVgYY--YRUv0CJec" #API_key used for GEM
 
 class EcoScanHandler(http.server.BaseHTTPRequestHandler): #create a class that acts as a server handling requests
 
+    def do_OPTIONS(self):
+        """Handles CORS preflight requests."""
+        self.send_response(200)
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.end_headers()
+
     def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-type", "application/json")
+        self.send_header("Access-Control-Allow-Origin", "*")  # Allow requests from any domain
+        self.end_headers()
+
         if self.path[:self.path.find("?")] == "/barcode":
             params = {param.split("=")[0]:param.split("=")[1] for param in self.path[self.path.find("?") + 1:].split("&")}
             if "barcode" in params.keys():
                 barcode = params["barcode"]
                 response = self.api_parser(barcode)
-                self.send_response(200)
-                self.send_header("Content-type", "application/json")
-                self.end_headers()
                 self.wfile.write(json.dumps(response).encode("utf-8"))
-            else:
-                self.send_response(200)
-                self.end_headers()
                     
         if self.path[:self.path.find("?")] == "/explain":
             params = {param.split("=")[0]:param.split("=")[1] for param in self.path[self.path.find("?") + 1:].split("&")}
@@ -34,13 +41,7 @@ class EcoScanHandler(http.server.BaseHTTPRequestHandler): #create a class that a
                 response = self.api_parser(barcode)
                 llm_response = llm_prompter(response)
 
-                self.send_response(200)
-                self.send_header("Content-type", "application/json")
-                self.end_headers()
                 self.wfile.write(llm_response.encode("utf-8"))
-            else:
-                self.send_response(200)
-                self.end_headers()
 
     def api_parser(self, barcode):
         url = f'/api/v3/product/{barcode}'
@@ -49,8 +50,8 @@ class EcoScanHandler(http.server.BaseHTTPRequestHandler): #create a class that a
         response = connection.getresponse()
 
         while response.status == 301:
-            connection = http.client.HTTPSConnection(parsed_url.netloc)
-            connection.request('GET', parsed_url.path + ('?' + parsed_url.query if parsed_url.query else ''))
+            connection = http.client.HTTPSConnection(url.netloc)
+            connection.request('GET', url.path + ('?' + url.query if url.query else ''))
             response = connection.getresponse()
 
         product_data = json.loads((response.read()).decode('utf-8'))
