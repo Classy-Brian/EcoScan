@@ -14,7 +14,10 @@ export default function Index() {
       />
 
       {/* Title */}
-      <Text style={styles.title}>EcoScan</Text>
+      <Image 
+        source={require('../assets/images/logotext.svg')} 
+        style={styles.logo} 
+      />
 
       {/* Get Started Button */}
       <TouchableOpacity style={styles.button} onPress={() => router.push('/scan')}>
