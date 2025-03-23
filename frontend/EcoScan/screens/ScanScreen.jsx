@@ -4,7 +4,8 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button, ScrollView, TextInput } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import { useRouter } from 'expo-router'; 
+import { useRouter } from 'expo-router';
+import axios from 'axios';
 
 // Define the main functional component named HomeScreen.
 export default function HomeScreen() {
@@ -30,6 +31,27 @@ export default function HomeScreen() {
       setHasPermission(status === 'granted');
     })(); // The empty dependency array [] ensures this effect runs only once, on mount.
   }, []);
+
+  const API_HOST = process.env.EXPO_PUBLIC_API_HOST; // Ensure this is defined in .env
+  const API_PORT = process.env.EXPO_PUBLIC_API_PORT || 6968; // Default to 6968 if not set
+
+const fetchBarcode = async (barcode) => {
+  try {
+    setLoading(true);
+    setError(null);
+
+    const response = await axios.get(`http://${API_HOST}:${API_PORT}/barcode?barcode=${encodeURIComponent(barcode)}`);
+
+    console.log("Fetched barcode data:", response.data);
+    setRecipes(response.data.length > 0 ? response.data : []);
+
+  } catch (err) {
+    console.error('Error fetching barcode:', err);
+    setError('Failed to fetch barcode. Please try again later.');
+  } finally {
+    setLoading(false);
+  }
+};
 
   // Function to handle barcode scanning events.
   const handleBarCodeScanned = ({ type, data }) => {
