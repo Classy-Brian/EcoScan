@@ -1,22 +1,50 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, Button, ScrollView, TextInput } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import { Camera } from 'expo-camera';
+import { useNavigation } from '@react-navigation/native'; // Add this for navigation
 
 export default function HomeScreen() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const [barcodeInput, setBarcodeInput] = useState('');
+  const navigation = useNavigation(); // Hook for navigation
 
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
+      const { status } = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === 'granted');
     })();
   }, []);
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    // Simulate barcode data from a scanned item
+    const barcodeInfo = {
+      barcode: data,
+      quantity: '33 cl',
+      packaging: 'Plastic, Bottle',
+      brand: 'Sidi Ali',
+      category: 'Beverages and beverages preparations, Beverages, Waters, Spring waters, Mineral waters, Unsweetened beverages, Natural mineral waters',
+      country: 'Morocco',
+    };
+    navigation.navigate('instruction', { barcodeInfo }); // Wrap barcodeInfo in params
+  };
+  
+  const handleManualBarcode = () => {
+    if (barcodeInput) {
+      setScanned(true);
+      const barcodeInfo = {
+        barcode: barcodeInput,
+        id: barcodeInput,
+        name: 'Sidi Ali - 33 cl',
+        quantity: '33 cl',
+        packaging: 'Plastic, Bottle',
+        brand: 'Sidi Ali',
+        category: 'Beverages and beverages preparations, Beverages, Waters, Spring waters, Mineral waters, Unsweetened beverages, Natural mineral waters',
+        country: 'Morocco',
+      };
+      navigation.navigate('instruction', { barcodeInfo }); // Wrap barcodeInfo in params
+    }
   };
 
   if (hasPermission === null) {
@@ -44,13 +72,16 @@ export default function HomeScreen() {
         </Text>
       </View>
 
-      {/* Steps Below Description */}
-      <View style={styles.stepsContainer}>
-        <Text style={styles.stepTitle}>Steps:</Text>
-        <Text style={styles.stepText}>1. Open the EcoScan app.</Text>
-        <Text style={styles.stepText}>2. Scan the barcode of an item.</Text>
-        <Text style={styles.stepText}>3. Get information on how to dispose/recycle the item responsibly.</Text>
-        <Text style={styles.stepText}>4. Follow the disposal/recycling instructions.</Text>
+      {/* Manual Barcode Input */}
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter Barcode"
+          value={barcodeInput}
+          onChangeText={setBarcodeInput}
+          keyboardType="numeric"
+        />
+        <Button title="Enter Barcode Manually" onPress={handleManualBarcode} />
       </View>
 
       {/* Button to Scan Again */}
@@ -66,14 +97,14 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingBottom: 20, // Adds space at the bottom of the content
+    paddingBottom: 20,
   },
   cameraContainer: {
     width: '100%',
-    height: 400, // Adjust the camera height if necessary
+    height: 400,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20, // Space between camera and description
+    marginBottom: 20,
   },
   camera: {
     width: '100%',
@@ -95,19 +126,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333',
   },
-  stepsContainer: {
-    marginTop: 30, // Adds space between description and steps
-    paddingHorizontal: 20,
-    alignItems: 'flex-start',
+  inputContainer: {
+    marginTop: 20,
+    width: '80%',
+    alignItems: 'center',
   },
-  stepTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
+  input: {
+    width: '100%',
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
     marginBottom: 10,
-  },
-  stepText: {
-    fontSize: 16,
-    marginBottom: 5,
-    color: '#333',
+    paddingLeft: 10,
   },
 });
