@@ -82,17 +82,25 @@ export default function HomeScreen() {
   };
 
   // Function to handle barcode scanning events.
-  const handleBarCodeScanned = ({ type, data }) => {
-    // Set scanned to true to indicate a barcode has been scanned.
-    setScanned(true);
-    fetchBarcode(data)
-    console.log(barcodeInput)
-    let barcode = barcodeInput; // Assign barcodeInput directly
-    let packaging = 'Plastic, Bottle';
-    let brand = 'Sidi Ali';
-    console.log("SCANSCREEN (Manual)", { barcode, packaging, brand});
-    router.push({ pathname: 'instruction', params: { barcode, packagin, brand} });
-  };
+  const handleBarCodeScanned = async ({ data }) => {
+    setScanned(true); // Prevent multiple scans
+
+    await fetchBarcode(data); 
+    await fetchInstructions(data);
+
+    // AFTER the await, output is ready. Use it directly.
+    let barcode = data;
+    let packaging = output?.materials?.[0]?.packaging || 'Unknown'; 
+    let brand = 'Unknown'; // Placeholder for brand
+    let materials = output?.materials || [];
+    let recycling_instructions = instruction;
+    let images = output?.images || [];
+
+    console.log("SCANSCREEN (Auto)", { barcode, packaging, brand, materials, images });
+    console.log("SCAN SCREEN INSTRUCTION:", { recycling_instructions });
+
+    router.push({ pathname: 'instruction', params: { barcode, packaging, brand, materials, recycling_instructions, images } });
+};
 
   // Function to handle manual barcode entry.
   const handleManualBarcode = async () => { // MUST be async

@@ -9,7 +9,7 @@ export default function Index() {
     <View style={styles.container}>
       {/* Logo */}
       <Image 
-        source={require('../assets/images/RecycScan_logo4.png')} 
+        source={require('../assets/images/logo.svg')} 
         style={styles.logo} 
       />
 

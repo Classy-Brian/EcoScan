@@ -10,7 +10,7 @@ function HeaderLogo() {
     <View style={styles.logoContainer}>
       <Image
         style={styles.stretch}
-        source={require('../assets/images/RecycScan_logo4.png')}
+        source={require('../assets/images/logo.svg')}
       />
     </View>
   );
