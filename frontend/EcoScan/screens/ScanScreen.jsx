@@ -18,6 +18,8 @@ export default function HomeScreen() {
   // State for storing the manually entered barcode. Starts as an empty string.
   const [barcodeInput, setBarcodeInput] = useState('');
 
+  const [output, setOutput] = useState('');
+
   // Get the router instance using the useRouter hook from expo-router.  This is used for navigation.
   const router = useRouter(); 
 
@@ -32,31 +34,34 @@ export default function HomeScreen() {
     })(); // The empty dependency array [] ensures this effect runs only once, on mount.
   }, []);
 
-  const API_HOST = process.env.EXPO_PUBLIC_API_HOST; // Ensure this is defined in .env
-  const API_PORT = process.env.EXPO_PUBLIC_API_PORT || 6968; // Default to 6968 if not set
 
-const fetchBarcode = async (barcode) => {
-  try {
-    setLoading(true);
-    setError(null);
-
-    const response = await axios.get(`http://${API_HOST}:${API_PORT}/barcode?barcode=${encodeURIComponent(barcode)}`);
-
-    console.log("Fetched barcode data:", response.data);
-    setRecipes(response.data.length > 0 ? response.data : []);
-
-  } catch (err) {
-    console.error('Error fetching barcode:', err);
-    setError('Failed to fetch barcode. Please try again later.');
-  } finally {
-    setLoading(false);
-  }
-};
+  const fetchBarcode = async (barcode) => {
+    try {
+      const apiUrl = `http://localhost:6968/barcode?barcode=${barcode}`;
+      
+      const response = await fetch(apiUrl);
+  
+      // Check if the response is ok (status code 200-299)
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const data = await response.json();
+      console.log("Fetched barcode data:", data);
+  
+      // You can process or display the fetched data as needed
+      setOutput(data.length > 0 ? data : []);
+  
+    } catch (err) {
+      console.error('Error fetching barcode:', err);
+    }
+  };
 
   // Function to handle barcode scanning events.
   const handleBarCodeScanned = ({ type, data }) => {
     // Set scanned to true to indicate a barcode has been scanned.
     setScanned(true);
+    fetchBarcode(data)
     let barcode = barcodeInput; // Assign barcodeInput directly
     let quantity = '33 cl';     // Keep these as defaults or get them from somewhere else
     let packaging = 'Plastic, Bottle';
@@ -71,6 +76,8 @@ const fetchBarcode = async (barcode) => {
   const handleManualBarcode = () => { // Removed { type, data } - not needed
     if (barcodeInput) {
       setScanned(true);
+      fetchBarcode(barcodeInput)
+      console.log(barcodeInput)
       let barcode = barcodeInput; // Assign barcodeInput directly
       let quantity = '33 cl';     // Keep these as defaults or get them from somewhere else
       let packaging = 'Plastic, Bottle';
@@ -126,7 +133,7 @@ const fetchBarcode = async (barcode) => {
           onChangeText={setBarcodeInput} // Update state when text changes.
           keyboardType="numeric" // Show a numeric keyboard.
         />
-        <Button title="Enter Barcode Manually" onPress={handleManualBarcode} />
+        <Button title="Enter Barcode Manually" onPress={handleManualBarcode}/>
       </View>
 
       {/* Conditional "Scan Again" Button */}
