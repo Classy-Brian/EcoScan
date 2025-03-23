@@ -61,15 +61,13 @@ export default function HomeScreen() {
   const handleBarCodeScanned = ({ type, data }) => {
     // Set scanned to true to indicate a barcode has been scanned.
     setScanned(true);
-    fetchBarcode(data)
+    fetchBarcode(barcodeInput)
+    console.log(barcodeInput)
     let barcode = barcodeInput; // Assign barcodeInput directly
-    let quantity = '33 cl';     // Keep these as defaults or get them from somewhere else
     let packaging = 'Plastic, Bottle';
     let brand = 'Sidi Ali';
-    let category = 'Beverages and beverages preparations, Beverages, Waters, Spring waters, Mineral waters, Unsweetened beverages, Natural mineral waters';
-    let country = 'Morocco';
-    console.log("SCANSCREEN (Manual)", { barcode, quantity, packaging, brand, category, country });
-    router.push({ pathname: 'instruction', params: { barcode, quantity, packaging, brand, category, country } });
+    console.log("SCANSCREEN (Manual)", { barcode, packaging, brand});
+    router.push({ pathname: 'instruction', params: { barcode, packagin, brand} });
   };
 
   // Function to handle manual barcode entry.
@@ -79,13 +77,10 @@ export default function HomeScreen() {
       fetchBarcode(barcodeInput)
       console.log(barcodeInput)
       let barcode = barcodeInput; // Assign barcodeInput directly
-      let quantity = '33 cl';     // Keep these as defaults or get them from somewhere else
       let packaging = 'Plastic, Bottle';
       let brand = 'Sidi Ali';
-      let category = 'Beverages and beverages preparations, Beverages, Waters, Spring waters, Mineral waters, Unsweetened beverages, Natural mineral waters';
-      let country = 'Morocco';
-      console.log("SCANSCREEN (Manual)", { barcode, quantity, packaging, brand, category, country });
-      router.push({ pathname: 'instruction', params: { barcode, quantity, packaging, brand, category, country } });
+      console.log("SCANSCREEN (Manual)", { barcode, packaging, brand});
+      router.push({ pathname: 'instruction', params: { barcode, packaging, brand} });
     }
   };
 
@@ -108,7 +103,7 @@ export default function HomeScreen() {
         {/* BarCodeScanner component from expo-barcode-scanner. */}
         <BarCodeScanner
           // If scanned is true, don't call handleBarCodeScanned (prevents multiple scans).
-          // If scanned is false, call handleBarCodeScanned when a barcode is detected.
+          // If scanned is false, wcall handleBarCodeScanned when a barcode is detected.
           onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
           // Apply styles for the camera view.
           style={styles.camera}

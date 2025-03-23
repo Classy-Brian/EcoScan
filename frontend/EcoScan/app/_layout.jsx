@@ -10,7 +10,7 @@ function HeaderLogo() {
     <View style={styles.logoContainer}>
       <Image
         style={styles.stretch}
-        source={require('../assets/images/ecoscan_logo.png')}
+        source={require('../assets/images/RecycScan_logo4.png')}
       />
     </View>
   );
@@ -19,7 +19,7 @@ function HeaderLogo() {
 function HeaderTitle() {
   return (
     <View style={styles.titleContainer}>
-      <Text style={styles.title}>EcoScan</Text>
+      <Text style={styles.title}>RecycScan</Text>
     </View>
   );
 }
@@ -46,6 +46,13 @@ const _layout = () => {
           }, 
         }}
       />
+      <Stack.Screen
+        name="index"
+        options={{
+          headerShown: false
+        }}
+
+      />
     </Stack>
   );
 };
@@ -64,11 +71,12 @@ const styles = StyleSheet.create({
     width: 120,
     height: 50,
     resizeMode: 'contain',
+    backgroundColor: colors.header,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: 'black', // Set title color to black
+    color: '#fff', // Set title color to black
   },
 });
 
