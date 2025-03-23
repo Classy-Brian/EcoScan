@@ -35,18 +35,14 @@ export default function HomeScreen() {
   const handleBarCodeScanned = ({ type, data }) => {
     // Set scanned to true to indicate a barcode has been scanned.
     setScanned(true);
-    // Create an object to store barcode information (simulated data).
-    const barcodeInfo = {
-      barcode: data, // The actual barcode data (e.g., "1234567890").
-      quantity: '33 cl',
-      packaging: 'Plastic, Bottle',
-      brand: 'Sidi Ali',
-      category:
-        'Beverages and beverages preparations, Beverages, Waters, Spring waters, Mineral waters, Unsweetened beverages, Natural mineral waters',
-      country: 'Morocco',
-    };
-    // Navigate to the 'instruction' screen and pass the barcodeInfo as a parameter.
-    router.push({ pathname: 'instruction', params: { barcodeInfo } });
+    let barcode = barcodeInput; // Assign barcodeInput directly
+    let quantity = '33 cl';     // Keep these as defaults or get them from somewhere else
+    let packaging = 'Plastic, Bottle';
+    let brand = 'Sidi Ali';
+    let category = 'Beverages and beverages preparations, Beverages, Waters, Spring waters, Mineral waters, Unsweetened beverages, Natural mineral waters';
+    let country = 'Morocco';
+    console.log("SCANSCREEN (Manual)", { barcode, quantity, packaging, brand, category, country });
+    router.push({ pathname: 'instruction', params: { barcode, quantity, packaging, brand, category, country } });
   };
 
   // Function to handle manual barcode entry.
