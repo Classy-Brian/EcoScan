@@ -26,6 +26,12 @@ export default function TabLayout() {
           title: 'home',
         }}
       />
+      <Tabs.Screen
+        name="instruction"
+        options={{
+          title:'instruction',
+        }}
+      />
     </Tabs>
   );
 }

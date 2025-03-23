@@ -26,8 +26,8 @@ function HeaderTitle() {
 
 const _layout = () => {
   return (
-    <Tabs>
-      <Tabs.Screen
+    <Stack>
+      <Stack.Screen
         name="(tabs)"
         options={{
           headerShown: true,
@@ -46,7 +46,7 @@ const _layout = () => {
           }, 
         }}
       />
-    </Tabs>
+    </Stack>
   );
 };
 
