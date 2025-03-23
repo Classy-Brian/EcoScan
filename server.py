@@ -24,32 +24,23 @@ class EcoScanHandler(http.server.BaseHTTPRequestHandler):
 
                 product_data = json.loads((response.read()).decode('utf-8'))
                 instructions = []
-                for packaging in product_data["product"]["packagings"]:
-                    material = packaging["material"]["id"]
-                    units = packaging["number_of_units"]
-                    shape = packaging["shape"]["id"]
-                    score = packaging["environmental_score_material_score"]
-                    how = packaging["recycling"]["id"]
-                    instruction = {"material":material,"units":units,"shape":shape,"how":how}  
+                for i in range(len(product_data["product"]["packagings"])):
+                    p = product_data["product"]["packagings"][i]
+                    e = product_data["product"]["ecoscore_data"]["adjustments"]["packaging"]["packagings"][i]
+                    material = p["material"]["id"] if "material" in p.keys() and "id" in p["material"].keys() else None
+                    units = p["number_of_units"] if "number_of_units" in p.keys() else None
+                    shape = p["shape"]["id"] if "shape" in p.keys() and "id" in p["shape"] else None
+                    how = p["recycling"]["id"] if "recycling" in p.keys() and "id" in p["recycling"].keys() else None
+                    score = e["environmental_score_material_score"] if "environmental_score_material_score" in e.keys() else None
+                    instruction = {"material": material,"units":units,"shape":shape,"score":score,"how":how}  
                     instructions.append(instruction)
                 # Respond to the original client
                 self.send_response(200)
                 self.send_header("Content-type", "application/json")
                 self.end_headers()
                 self.wfile.write(json.dumps(instructions).encode("utf-8"))
-    
-    def do_POST(self):
-        """Handle POST requests."""
-        content_length = int(self.headers['Content-Length'])
-        post_data = self.rfile.read(content_length)
-        
-        self.send_response(200)
-        self.send_header("Content-type", "text/html")
-        self.end_headers()
-        self.wfile.write(b"POST received\n")
-        self.wfile.write(b"Data: " + post_data)  # Echo back the POST data
 
-PORT = 6968
+PORT = 6967
 
 # Set up and start the server
 with socketserver.TCPServer(("", PORT), EcoScanHandler) as server:
