@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 
 export default function InstructionScreen() {
+  const router = useRouter();
+
   // Get parameters from navigation
   const { barcode, packaging, brand, materials, recycling_instructions, images } = useLocalSearchParams();
 
@@ -49,6 +51,13 @@ export default function InstructionScreen() {
       <Text style={styles.disclaimer}>
         This information is for general guidance only. Always refer to your local recycling guidelines.
       </Text>
+
+      {/* Back to Scan Button - Rounded with Outline */}
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.roundedButton} onPress={() => router.push('/scan')}>
+          <Text style={styles.buttonText}>Back to Scan</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 }
@@ -73,8 +82,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     borderRadius: 10,
     marginBottom: 10,
-    borderWidth: 3,         // Added border width for outline
-    borderColor: '#333',    // Added border color for outline
+    borderWidth: 3,         
+    borderColor: '#333',    
   },
   image: {
     width: '80%',
@@ -132,4 +141,26 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#666',
   },
+  buttonContainer: {
+    marginTop: 20,
+    marginBottom: 40,
+    alignSelf: 'center',
+    width: '60%',
+  },
+  roundedButton: {
+    width: '100%',
+    paddingVertical: 12,
+    backgroundColor: '#007AFF',
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: '#005BBB',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });
+
