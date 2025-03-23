@@ -1,24 +1,41 @@
 // backend/server.js
 import express from 'express';
-import dotenv from "dotenv";
-dotenv.config(); 
+
 
 import cors from 'cors';
-import { connectDB } from './config/db.js';
+
 
 import axios from 'axios';
 
+import { createRequire } from 'module'
+import dotenv from "dotenv";
+import { GoogleGenerativeAI } from "@google/generative-ai"
+
+dotenv.config();
+const API_KEY = "AIzaSyA5lO6r-NK1kDgQh_zIVgYY--YRUv0CJec"
+const genAI = new GoogleGenerativeAI(API_KEY)
+
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT =  5000;
+
 
 app.use(express.json()); // Allows us to accept JSON data in the req body
 app.use(cors());
 
+
+
+
+//API
+
+
+
+
+
 // API route to fetch product data
 app.get('/api/product/:barcode', async (req, res) => {
     const barcode = req.params.barcode;
-    const url = `https://world.openfoodfacts.org/api/v3/product/${barcode}?fields=product_name,image_url,packagings`; 
+    const url = `https://world.openfoodfacts.org/api/v3/product/${barcode}`; 
     
     console.log("Barcode:", barcode); 
     console.log("Requesting URL:", url); 
@@ -30,8 +47,26 @@ app.get('/api/product/:barcode', async (req, res) => {
     if (response.status === 200) {
         // Check if the product was found (Open Food Facts returns status 0 if not found)
         const productData = response.data.product;
+        console.log(productData)
 
-        res.json(productData);
+        res.json(productData)
+
+
+
+
+
+        /*
+        //making call to gemini api
+        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+        
+        //prompt given to model through api
+        const prompt = `Explain how I can recycle this product ${productData["product_name"]}`;
+        
+        const result = await model.generateContent(prompt);
+        const llm_response = await result.response;
+        res.send(llm_response.text())*/
+    
+       
 
     } else {
       // Handle other HTTP errors
@@ -53,7 +88,7 @@ app.get('/api/product/:barcode', async (req, res) => {
   }
 });
 
+
 app.listen(PORT, () => {
-    connectDB(); // Connect to DB after starting server
     console.log(`Server started at http://localhost:${PORT}`);
 });
